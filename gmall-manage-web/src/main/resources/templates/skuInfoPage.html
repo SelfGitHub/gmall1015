@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="sku_dlg" class="easyui-dialog" title="编辑sku" style="width:700px;height:520px;"
+     closed="true" data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#skuBtns">
+    <form id="skuForm">
+        <br/>
+        <label>sku名称:</label>
+        <input id="skuName" name="skuName" class="easyui-textbox" data-options="" style="width:300px;"/>
+        <br/><br/>
+        <label>商品价格:</label>
+        <input id="price" name="price" class="easyui-numberbox" data-options="min:0,precision:2" style="width:300px;"/>
+        <br/><br/>
+        <label>商品重量（千克):</label>
+        <input id="weight" name="weight" class="easyui-numberbox" data-options="min:0,precision:2"
+               style="width:300px;"/>
+        <br/><br/>
+        <label>商品规格描述:</label>
+        <input id="skuDesc" name="skuDesc" class="easyui-textbox" data-options="multiline:true"
+               style="width:500px;height:100px"/>
+        <input id="spuIdForSku" name="spuId" type="hidden"/>
+
+        <input id="skuId" name="id" type="hidden"/>
+
+        <input id="catalog3IdForSku" name="catalog3Id" type="hidden"/>
+        <br/><br/>
+
+        <input id="skuInfo" name="skuInfo" type="hidden"/>
+
+
+        <div id="attrInfoGroup" title="平台属性" class="easyui-panel" style="padding:5px;"></div>
+
+        <div id="spuSaleAttrGroup" title="销售属性" class="easyui-panel" style="padding:5px;"></div>
+
+
+        <!----------------商品图片列表 ----------------------->
+
+        <table id="skuImgDg" class="easyui-datagrid" title="商品图片列表"
+               data-options="singleSelect:false,selectOnCheck:false,method:'get'"></table>
+
+        <br/><br/>
+
+    </form>
+</div>
+<!----------------弹出框的按钮组----------------------->
+<div id="skuBtns">
+    <a href="#" class="easyui-linkbutton" onclick="saveSku()">保 存</a>
+    <a href="#" class="easyui-linkbutton" onclick="closeSku()">关 闭</a>
+</div>
+
+
+</body>
+<script>
+
+    function saveSku() {
+        var sku={}
+        //获取选中的图片
+        var ImgRows = $("#skuImgDg").datagrid("getChecked");
+        if (ImgRows.length < 3){
+            layer.msg("请至少选择三张图片");
+        }else{
+            var skuDefaultImage = $("input[name='isDefault']:checked").val();
+            $(ImgRows).each(function (i,row) {
+                if (!skuDefaultImage && i == 0){
+                    skuDefaultImage = row.imgUrl;
+                }
+                sku["skuImageList["+i+"].imgName"] = row.imgName;
+                sku["skuImageList["+i+"].imgUrl"] = row.imgUrl;
+                if (skuDefaultImage == row.imgUrl){
+                    sku["skuImageList["+i+"].isDefault"] = 1;
+                }else{
+                    sku["skuImageList["+i+"].isDefault"] = 0;
+                }
+            })
+        }
+    }
+    function initSkuImgListDatagrid(spuId) {
+        $("#skuImgDg").datagrid( {
+            url:'spuImageList?spuId='+spuId,
+            columns: [[
+                {field: 'id', checkbox:true, width: 80},
+                {field: 'imgName', title: '图片简称', width: 100},
+                {field: 'showImg', title: '图片展示', width: 200 ,
+                    formatter: function(value,row,index){
+                    return " <img src='"+row.imgUrl+"' width='200px' height='100px'/>";
+                }
+                },
+                {field: 'imgUrl', title: '图片路径', width: 200 },
+                {field: 'isdefault', title: '是否默认图片', width: 100 ,
+                    formatter: function(value,row,index){
+                        return " <input type='radio' value='"+row.imgUrl+"' name='isDefault'/>";
+                    }},
+            ]],
+
+            }
+        )
+
+    }
+    function initAttrInfoGroup(catalog3Id) {
+        $("#attrInfoGroup").append('<input id="cc" name="dept" value="aa">  ');
+        $("#cc").combobox({
+            valueField:'id',
+            textField:'text'
+        })
+    }
+    function  initSpuSaleAttrGroup(spuId,skuInfo) {
+        $("#spuSaleAttrGroup").append('<input id="dd" name="dept" value="aa">  ');
+        $("#dd").combobox({
+            valueField:'id',
+            textField:'text'
+        })
+    }
+
+</script>
+</html>

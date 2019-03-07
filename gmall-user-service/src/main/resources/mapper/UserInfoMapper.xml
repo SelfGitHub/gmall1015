@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.gmall.user.mapper.UserInfoMapper" >
+
+    <select id="selectAllUser" resultType="com.atguigu.gmall.bean.UserInfo">
+        SELECT * from user_info;
+    </select>
+    <select id="selectUser" resultType="com.atguigu.gmall.bean.UserInfo">
+        SELECT id,login_name,nick_name,passwd,name,phone_num,email,head_img,user_level FROM user_info WHERE  login_name=#{loginName} AND passwd=#{passwd}
+    </select>
+    <select id="selectUserAddressList" resultType="com.atguigu.gmall.bean.UserAddress">
+        SELECT * from user_address WHERE  user_id=#{userid}
+    </select>
+
+</mapper>
