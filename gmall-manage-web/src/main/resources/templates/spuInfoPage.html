@@ -81,7 +81,7 @@
             alert(JSON.stringify(spuSaleAttrValueList))
             $(spuSaleAttrValueList).each(function (j,saleAttrValue) {
                 spu["spuSaleAttrList["+i+"].spuSaleAttrValueList["+j+"].saleAttrValueName"] = saleAttrValue.saleAttrValueName;
-                spu["spuSaleAttrList["+i+"].spuSaleAttrValueList["+j+"].saleAttrId"] = saleAttrValue.saleAttrId;
+                spu["spuSaleAttrList["+i+"].spuSaleAttrValueList["+j+"].saleAttrId"] = row.saleAttrId;
 
             })
         })

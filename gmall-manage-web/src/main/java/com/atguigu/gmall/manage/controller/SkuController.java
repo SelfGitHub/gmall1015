@@ -21,5 +21,10 @@ public class SkuController {
         return skuService.skuInfoListBySpu(spuId);
     }
 
-
+    @RequestMapping("saveSku")
+    @ResponseBody
+    public String saveSku(SkuInfo skuInfo){
+         skuService.saveSku(skuInfo);
+         return "success";
+    }
 }

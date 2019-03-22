@@ -74,6 +74,33 @@ public class SpuServiceImpl implements SpuService {
         spuImage.setSpuId(spuId);
         return spuImageMapper.select(spuImage);
     }
+
+    /**
+     * 查询所有的销售属性
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<SpuSaleAttr> getListSpuAttrValueBySpuId(String spuId) {
+        SpuSaleAttr spuSaleAttr = new SpuSaleAttr();
+        spuSaleAttr.setSpuId(spuId);
+        List<SpuSaleAttr> SpuSaleAttrList = spuSaleAttrMapper.select(spuSaleAttr);
+        for (SpuSaleAttr saleAttr : SpuSaleAttrList) {
+            SpuSaleAttrValue spuSaleAttrValue = new SpuSaleAttrValue();
+            spuSaleAttrValue.setSpuId(spuId);
+            spuSaleAttrValue.setSaleAttrId(saleAttr.getSaleAttrId());
+            List<SpuSaleAttrValue> SpuSaleAttrValueList = spuSaleAttrValueMapper.select(spuSaleAttrValue);
+            saleAttr.setSpuSaleAttrValueList(SpuSaleAttrValueList);
+        }
+        return SpuSaleAttrList;
+    }
+
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(String spuId,String skuId) {
+        List<SpuSaleAttr> spuSaleAttrs = spuSaleAttrMapper.selectSpuSaleAttrListCheckBySku(spuId,skuId);
+        return spuSaleAttrs;
+    }
 }
 
 

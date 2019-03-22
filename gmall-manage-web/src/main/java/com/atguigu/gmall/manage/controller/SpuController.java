@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.atguigu.gmall.bean.BaseSaleAttr;
 import com.atguigu.gmall.bean.SpuImage;
 import com.atguigu.gmall.bean.SpuInfo;
+import com.atguigu.gmall.bean.SpuSaleAttr;
 import com.atguigu.gmall.manage.util.MyFileUpload;
 import com.atguigu.gmall.service.SpuService;
 import org.springframework.stereotype.Controller;
@@ -49,5 +50,12 @@ public class SpuController {
     public List<SpuImage> spuImageList(String spuId){
         return spuService.spuImageList(spuId);
     }
+
+    @RequestMapping("getListSpuAttrValueBySpuId")
+    @ResponseBody
+    public List<SpuSaleAttr> getListSpuAttrValueBySpuId(String spuId){
+        return spuService.getListSpuAttrValueBySpuId(spuId);
+    }
+
 
 }

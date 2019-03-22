@@ -75,6 +75,45 @@
                 }else{
                     sku["skuImageList["+i+"].isDefault"] = 0;
                 }
+                sku["skuImageList["+i+"].spuImgId"] = row.id;
+            })
+            sku["skuDefaultImg"] = skuDefaultImage;
+            //封装选中的平台属性
+            //获取选中的下拉列表
+            var attrName = $("#attrInfoGroup").children("span");
+            $(attrName).each(function (i,span) {
+               var attrId =  $(span).attr("attrId");
+                var valueId = $(span).children("select").val();
+                sku["skuAttrValueList["+i+"].attrId"] = attrId;
+                sku["skuAttrValueList["+i+"].valueId"] = valueId;
+            })
+            //封装销售属性
+            var spuAttrNameList = $("#spuSaleAttrGroup").children("span");
+            $(spuAttrNameList).each(function (i,span) {
+               var saleAttrId =  $(span).attr("saleAttrId");
+               var saleAttrName = $(span).attr("saleAttrValue");
+               var saleAttrValueName = $(span).children("select").find("option:selected").text();
+               var saleAttrValueId = $(span).children("select").val();
+               sku["skuSaleAttrValueList["+i+"].saleAttrId"] = saleAttrId;
+               sku["skuSaleAttrValueList["+i+"].saleAttrName"] = saleAttrName;
+               sku["skuSaleAttrValueList["+i+"].saleAttrValueName"] = saleAttrValueName;
+               sku["skuSaleAttrValueList["+i+"].saleAttrValueId"] = saleAttrValueId;
+
+            })
+            //封装其他信息
+            var skuName = $("#skuName").textbox("getValue");
+            var price = $("#price").textbox("getValue");
+            var weight = $("#weight").textbox("getValue");
+            var skuDesc = $("#skuDesc").textbox("getValue");
+            sku["skuName"] = skuName;
+            sku["price"] = price;
+            sku["weight"] = weight;
+            sku["skuDesc"] = skuDesc;
+            var spu = $("#spulist_dg").datagrid("getSelected");
+            sku["spuId"] = spu.id;
+            sku["catalog3Id"] = $("#ctg3ForAttrList").combobox("getValue")
+            $.post('saveSku',sku,function (data) {
+                $("#sku_dlg").dialog("close");
             })
         }
     }
@@ -95,25 +134,48 @@
                         return " <input type='radio' value='"+row.imgUrl+"' name='isDefault'/>";
                     }},
             ]],
-
             }
         )
-
     }
     function initAttrInfoGroup(catalog3Id) {
-        $("#attrInfoGroup").append('<input id="cc" name="dept" value="aa">  ');
-        $("#cc").combobox({
-            valueField:'id',
-            textField:'text'
-        })
+        $("#attrInfoGroup").empty();
+        $.post(
+            "getListAttrValueByCatalog3Id",
+            {"catalog3Id":catalog3Id},
+             function (data) {
+                $(data).each(function (i,attr) {
+                    var spanBegin = "<span attrId ='"+attr.id +"' >"+attr.attrName;
+                    var selectBegin = "<select>";
+                    var valueOption = "";
+                       $(attr.attrValueList).each(function (j,attrValue) {
+                           valueOption = valueOption + " <option value='"+attrValue.id+"'>"+attrValue.valueName+"</option> ";
+                       })
+                    var selectEnd = "</select>";
+                    var spanEnd = "</span>";
+                    $("#attrInfoGroup").append(spanBegin+selectBegin+valueOption+selectEnd+spanEnd);
+                })
+             }
+        )
     }
-    function  initSpuSaleAttrGroup(spuId,skuInfo) {
-        $("#spuSaleAttrGroup").append('<input id="dd" name="dept" value="aa">  ');
-        $("#dd").combobox({
-            valueField:'id',
-            textField:'text'
-        })
+    function  initSpuSaleAttrGroup(spuId) {
+        $("#spuSaleAttrGroup").empty();
+        $.post(
+            "getListSpuAttrValueBySpuId",
+            {"spuId":spuId},
+            function (data) {
+                $(data).each(function (i,spuAttr) {
+                    var spanBegin = "<span saleAttrId='"+spuAttr.saleAttrId +"' saleAttrValue='"+spuAttr.saleAttrName+"'>"+spuAttr.saleAttrName;
+                    var selectBegin = "<select>";
+                    var valueOption = "";
+                    $(spuAttr.spuSaleAttrValueList).each(function (j,saleAttrValue) {
+                        valueOption = valueOption + " <option value='"+saleAttrValue.id+"'>"+saleAttrValue.saleAttrValueName+"</option> ";
+                    })
+                    var selectEnd = "</select>";
+                    var spanEnd = "</span>";
+                    $("#spuSaleAttrGroup").append(spanBegin+selectBegin+valueOption+selectEnd+spanEnd);
+                })
+            }
+        )
     }
-
 </script>
 </html>

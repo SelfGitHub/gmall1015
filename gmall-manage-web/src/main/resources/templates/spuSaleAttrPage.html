@@ -56,7 +56,7 @@
 
     function initSpuSaleAttrDlg() {
         //清空字典下拉列表
-        $("#saleAttrSelect").combobox("reload");
+        $("#saleAttrSelect").combobox("reset");
         //清空销售属性值列表
         var spuSaleAttrValueDg=$("#spuSaleAttrValueDg").datagrid({url:""});
         spuSaleAttrValueDg.datagrid('loadData', { total: 0, rows: [] });
